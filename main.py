@@ -1,6 +1,7 @@
 from fastmcp import FastMCP, Context
 from pydantic import Field
 from lib.list_packages import list_packages
+import textwrap
 
 mcp = FastMCP(name="Python Code Sandbox MCP Server")
 
@@ -20,7 +21,14 @@ async def list_packages_tool(
     ctx: Context,
     code=Field(
         ...,
-        description=""" Valid python code to run on the sandbox. Example: import numpy as np\narr = np.array([[1, 2], [3, 4]])\nprint(arr.shape) """,
+        description=textwrap.dedent(
+            """ Valid python code to run on the sandbox. 
+        - Use \n to represent every line break in the code
+        - Maintain exact indentation using spaces or tabs
+        - Escape double quotes as \" inside JSON strings
+        Example 1: for i in range(2):\n    if i > 0:\n        print(i)
+        Example 2: import numpy as np\narr = np.array([[1, 2], [3, 4]])\nprint(arr.shape) """
+        ),
     ),
 ) -> str:
     """Execute python code using exec() function."""
